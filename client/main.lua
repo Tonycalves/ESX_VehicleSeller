@@ -50,7 +50,7 @@ AddEventHandler('esx_vehicleseller:hasEnteredMarker', function(zone)
 	end
 end)
 
-AddEventHandler('esx_vehicleseller:hasExitedMarker', function(zone)
+AddEventHandler('esx_gouverneur:hasExitedMarker', function(zone)
 	ESX.UI.Menu.CloseAll()
 	CurrentAction = nil
 end)
@@ -117,13 +117,28 @@ Citizen.CreateThread(function()
 	end
 end)
 
-function OpenDeletevehicle(vehicle)
+function SellVehicle()
 	local vehicle = GetPlayersLastVehicle(GetPlayerPed(-1), true)
 	local model = GetEntityModel(vehicle)
 	TriggerServerEvent('esx_vehicleseller:getprice', {model = tostring(model)})
 	ESX.Game.DeleteVehicle(vehicle)
-	SendNotification("~g~Vous avez vendu votre véhicule !~w~")
+	SendNotification("~g~Vous avez vendu votre véhicule à la moitié du prix d'achat !~w~")
 end
+
+function OpenDeletevehicle(vehicle)
+	local vehicle = GetPlayersLastVehicle(GetPlayerPed(-1), true)
+	local model = GetEntityModel(vehicle)
+	TriggerServerEvent('esx_vehicleseller:checkifowner', {model = tostring(model)})
+end
+
+RegisterNetEvent('esx_vehicleseller:checkifowner_fromdb')
+AddEventHandler('esx_vehicleseller:checkifowner_fromdb', function(check)
+    if not check then
+    	SendNotification("~r~Ce véhicule n'est pas le votre, impossible de vendre un véhicule que vous n'avez pas acheté !~w~")
+    else
+    	SellVehicle()
+    end
+end)
 
 -- Key controls
 Citizen.CreateThread(function()
@@ -145,8 +160,6 @@ Citizen.CreateThread(function()
 		end
 	end
 end)
-
-
 
 ------------------------------
 

@@ -29,6 +29,22 @@ AddEventHandler('esx_vehicleseller:getprice', function(vehicle)
 	end)
 end)
 
+RegisterServerEvent('esx_vehicleseller:checkifowner')
+AddEventHandler('esx_vehicleseller:checkifowner', function(vehicle)
+
+    local identifiers = GetPlayerIdentifiers(source)
+    local currentSource = source
+	local model = tostring(vehicle.model)
+	    MySQL.Async.fetchAll("SELECT * FROM user_vehicle WHERE owner=@owner AND model=@model ORDER BY name ASC LIMIT 1", {['@owner'] = identifiers[1], ['@model'] =  model}, function(vehicle)
+	        if vehicle[1] then
+	            TriggerClientEvent('esx_vehicleseller:checkifowner_fromdb', currentSource, true)
+	        else
+
+	            TriggerClientEvent('esx_vehicleseller:checkifowner_fromdb', currentSource, false)
+	        end
+	    end)
+end)
+
 function SendNotification(message)
 	SetNotificationTextEntry("STRING")
 	AddTextComponentString(message)

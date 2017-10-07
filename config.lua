@@ -9,7 +9,7 @@ Config.Locale = 'fr'
 
 Config.Zones = {
 
-	VehicleDeleter = { -- Marker pour vendre la voiture
+	VehicleDeleter = { -- Marker pour ranger la voiture
 		Pos   = {x = -45.657062, y = -1082.014770, z = 25.695154},
 		Size  = {x = 3.0, y = 3.0, z = 1.0},
 		Color = {r = 204, g = 0, b = 0},
